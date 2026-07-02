@@ -7,7 +7,7 @@ export default defineConfig({
     name: 'IOC Recon - Context Menu Search',
     short_name: 'IOC Recon',
     description:
-      'Right-click any selected text to search it across multiple configurable sources at once. Smart-keyword style lookups for analysts and power users.',
+      'Right-click selected text to search it across multiple sources at once. Smart-keyword lookups for analysts and power users.',
     minimum_chrome_version: '102',
     permissions: ['contextMenus', 'storage', 'scripting', 'activeTab'],
     optional_host_permissions: ['https://*/*', 'http://*/*'],
