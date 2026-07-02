@@ -3,6 +3,7 @@ import { defineConfig } from 'wxt';
 export default defineConfig({
   modules: ['@wxt-dev/module-react'],
   srcDir: '.',
+  suppressWarnings: { firefoxDataCollection: true },
   manifest: {
     name: 'IOC Recon - Context Menu Search',
     short_name: 'IOC Recon',
