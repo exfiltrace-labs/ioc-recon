@@ -1,0 +1,30 @@
+{
+  "name": "ioc-recon-context-search",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Right-click context-menu search across multiple configurable sources. Smart-keyword style lookups for analysts and power users.",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "compile": "tsc --noEmit",
+    "test": "vitest run",
+    "postinstall": "wxt prepare"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@wxt-dev/module-react": "^1.2.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9",
+    "wxt": "^0.20.26"
+  }
+}

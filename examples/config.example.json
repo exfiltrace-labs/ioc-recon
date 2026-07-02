@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "exportedAt": "2026-01-01T00:00:00.000Z",
+  "settings": {
+    "groupByCategory": true,
+    "showAllItem": true
+  },
+  "sources": [
+    {
+      "id": "team-vt-search",
+      "name": "VirusTotal Search",
+      "category": "Threat Intel",
+      "method": "GET",
+      "url": "https://www.virustotal.com/gui/search/%s",
+      "encoding": "url",
+      "refang": true,
+      "types": ["ipv4", "ipv6", "domain", "url", "md5", "sha1", "sha256"]
+    },
+    {
+      "id": "team-shodan",
+      "name": "Shodan",
+      "category": "Threat Intel",
+      "method": "GET",
+      "url": "https://www.shodan.io/search?query=%s",
+      "encoding": "url",
+      "refang": true,
+      "types": ["ipv4", "ipv6", "domain"]
+    },
+    {
+      "id": "team-abuseipdb",
+      "name": "AbuseIPDB",
+      "category": "Threat Intel",
+      "method": "GET",
+      "url": "https://www.abuseipdb.com/check/%s",
+      "encoding": "url",
+      "refang": true,
+      "types": ["ipv4", "ipv6"]
+    },
+    {
+      "id": "team-urlscan",
+      "name": "urlscan.io",
+      "category": "Threat Intel",
+      "method": "GET",
+      "url": "https://urlscan.io/search/#%s",
+      "encoding": "url",
+      "refang": true,
+      "types": ["domain", "url", "ipv4"]
+    },
+    {
+      "id": "team-nvd",
+      "name": "NVD (CVE)",
+      "category": "Vuln",
+      "method": "GET",
+      "url": "https://nvd.nist.gov/vuln/detail/%s",
+      "encoding": "url",
+      "refang": false,
+      "types": ["cve"]
+    },
+    {
+      "id": "team-internal-soar",
+      "name": "Internal SOAR - create case (example POST)",
+      "category": "Internal",
+      "method": "POST",
+      "url": "https://soar.example.com/api/cases/search",
+      "body": "indicator=%s&source=ioc-recon",
+      "contentType": "application/x-www-form-urlencoded",
+      "encoding": "none",
+      "refang": true,
+      "types": ["any"]
+    }
+  ]
+}
