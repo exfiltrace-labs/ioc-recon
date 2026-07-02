@@ -219,14 +219,14 @@ input:disabled, select:disabled, textarea:disabled { color: var(--text-dim); bac
 .modal-head {
   display: flex; align-items: center; justify-content: space-between;
   padding: 9px 10px 9px 14px; background: var(--titlebar);
-  border-bottom: 1px solid var(--border); position: sticky; top: 0;
+  border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 40;
   border-radius: var(--radius) var(--radius) 0 0;
 }
 .modal-head h2 { font-weight: 700; font-size: 14px; }
 .modal-body { padding: 16px; }
 .modal-foot {
   display: flex; justify-content: flex-end; gap: 9px; padding: 12px 16px;
-  border-top: 1px solid var(--border); background: var(--bg); position: sticky; bottom: 0;
+  border-top: 1px solid var(--border); background: var(--bg); position: sticky; bottom: 0; z-index: 40;
 }
 
 .preview {
