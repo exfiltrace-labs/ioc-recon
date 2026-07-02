@@ -1,5 +1,6 @@
-import type { Source, Encoding } from './types';
+import type { Source, Encoding, SourceTransform } from './types';
 import { refang as doRefang } from './indicators';
+import { compileRegex } from './regex';
 import { isHttpProtocol } from './url';
 
 export interface BuiltRequest {
@@ -23,11 +24,25 @@ function encodeValue(value: string, encoding: Encoding): string {
   }
 }
 
+export function applyTransforms(value: string, transforms?: SourceTransform[]): string {
+  if (!transforms?.length) return value;
+  let v = value;
+  for (const t of transforms) {
+    if (!t?.pattern) continue;
+    const re = compileRegex(t.pattern, t.flags ?? 'g');
+    if (!re) continue;
+    v = v.replace(re, t.replacement ?? '');
+  }
+  return v;
+}
+
 export function prepareValue(
   rawValue: string,
-  opts: { encoding?: Encoding; refang?: boolean },
+  opts: { encoding?: Encoding; refang?: boolean; transform?: SourceTransform[] },
 ): string {
-  return encodeValue(opts.refang ? doRefang(rawValue) : rawValue.trim(), opts.encoding ?? 'none');
+  const base = opts.refang ? doRefang(rawValue) : rawValue.trim();
+  const transformed = applyTransforms(base, opts.transform);
+  return encodeValue(transformed, opts.encoding ?? 'none');
 }
 
 export function expandTemplate(
@@ -46,7 +61,12 @@ export function buildRequest(
   rawValue: string,
   placeholder = DEFAULT_PLACEHOLDER,
 ): BuiltRequest {
-  const common = { placeholder, encoding: source.encoding, refang: source.refang };
+  const common = {
+    placeholder,
+    encoding: source.encoding,
+    refang: source.refang,
+    transform: source.transform,
+  };
   const url = expandTemplate(source.url, rawValue, common);
 
   const parsed = new URL(url);

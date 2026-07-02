@@ -1,7 +1,7 @@
 import { browser } from 'wxt/browser';
 import type { Source } from '../lib/types';
 import { getEffectiveSources, getLocalConfig } from '../lib/storage';
-import { detect, sourceMatches, refang, defang } from '../lib/indicators';
+import { detect, selectionMatchesSource, refang, defang } from '../lib/indicators';
 import { openLookup } from '../lib/open';
 import { syncRemote } from '../lib/remote';
 
@@ -196,7 +196,7 @@ async function handleClick(
 
   if (menuItemId === ALL_ID) {
     const detected = detect(selection);
-    const matching = sources.filter((s) => sourceMatches(s.types, detected.types));
+    const matching = sources.filter((s) => selectionMatchesSource(s, detected));
     const toOpen = matching.length ? matching : sources;
     let first = true;
     for (const s of toOpen) {

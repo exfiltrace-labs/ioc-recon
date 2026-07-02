@@ -15,6 +15,9 @@ export default defineConfig({
       gecko: {
         id: 'ioc-recon@exfiltrace-labs',
         strict_min_version: '128.0',
+        data_collection_permissions: {
+          required: ['none'],
+        },
       },
     },
     icons: {

@@ -38,7 +38,7 @@
     },
     {
       "id": "team-urlscan",
-      "name": "urlscan.io",
+      "name": "UrlScan.io",
       "category": "Threat Intel",
       "method": "GET",
       "url": "https://urlscan.io/search/#%s",
@@ -55,6 +55,18 @@
       "encoding": "url",
       "refang": false,
       "types": ["cve"]
+    },
+    {
+      "id": "team-mitre-attack",
+      "name": "MITRE ATT&CK",
+      "category": "Threat Intel",
+      "method": "GET",
+      "url": "https://attack.mitre.org/techniques/%s/",
+      "encoding": "none",
+      "refang": false,
+      "types": ["any"],
+      "match": { "pattern": "^T\\d{4}(\\.\\d{3})?$", "flags": "i" },
+      "transform": [{ "pattern": "\\.", "replacement": "/" }]
     },
     {
       "id": "team-internal-soar",

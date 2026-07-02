@@ -8,8 +8,11 @@ import type {
   Encoding,
   HttpMethod,
   IndicatorType,
+  SourceMatch,
+  SourceTransform,
 } from './types';
 import { ALL_INDICATOR_TYPES } from './indicators';
+import { regexError } from './regex';
 
 export const CONFIG_VERSION = 1;
 
@@ -61,9 +64,16 @@ export const SEED_SOURCES: Source[] = [
     types: ['ipv4', 'ipv6'], enabled: true,
   },
   {
-    id: 'seed-urlscan', name: 'urlscan.io', category: 'Threat Intel', method: 'GET',
+    id: 'seed-urlscan', name: 'UrlScan.io', category: 'Threat Intel', method: 'GET',
     url: 'https://urlscan.io/search/#%s', encoding: 'url', refang: true,
     types: ['domain', 'url', 'ipv4'], enabled: true,
+  },
+  {
+    id: 'seed-mitre', name: 'MITRE ATT&CK', category: 'Threat Intel', method: 'GET',
+    url: 'https://attack.mitre.org/techniques/%s/', encoding: 'none', refang: false,
+    types: ['any'], enabled: true,
+    match: { pattern: '^T\\d{4}(\\.\\d{3})?$', flags: 'i' },
+    transform: [{ pattern: '\\.', replacement: '/' }],
   },
   {
     id: 'seed-mxtoolbox', name: 'MXToolbox', category: 'Network', method: 'GET',
@@ -161,8 +171,68 @@ export function normalizeSource(
         : 'application/x-www-form-urlencoded';
   }
   if (o.openInBackground === true) source.openInBackground = true;
+
+  const match = normalizeMatch(o.match, where, warnings);
+  if (match) source.match = match;
+  const transform = normalizeTransforms(o.transform, where, warnings);
+  if (transform.length) source.transform = transform;
+
   if (!source.id) source.id = 'gen-' + Math.abs(hashString(sourceSignature(source))).toString(36);
   return source;
+}
+
+function normalizeMatch(
+  raw: unknown,
+  where: string,
+  warnings: string[],
+): SourceMatch | undefined {
+  if (raw == null) return undefined;
+  if (typeof raw !== 'object') {
+    warnings.push(`${where}: "match" must be an object; ignoring.`);
+    return undefined;
+  }
+  const o = raw as Record<string, unknown>;
+  const pattern = typeof o.pattern === 'string' ? o.pattern : '';
+  if (!pattern) return undefined;
+  const flags = typeof o.flags === 'string' && o.flags ? o.flags : undefined;
+  const err = regexError(pattern, flags);
+  if (err) {
+    warnings.push(`${where}: match pattern ignored. ${err}`);
+    return undefined;
+  }
+  return flags ? { pattern, flags } : { pattern };
+}
+
+function normalizeTransforms(
+  raw: unknown,
+  where: string,
+  warnings: string[],
+): SourceTransform[] {
+  if (raw == null) return [];
+  const arr = Array.isArray(raw) ? raw : [raw];
+  const out: SourceTransform[] = [];
+  arr.forEach((item, i) => {
+    if (typeof item !== 'object' || item === null) {
+      warnings.push(`${where}: transform #${i + 1} must be an object; ignoring.`);
+      return;
+    }
+    const o = item as Record<string, unknown>;
+    const pattern = typeof o.pattern === 'string' ? o.pattern : '';
+    if (!pattern) return;
+    const flags = typeof o.flags === 'string' && o.flags ? o.flags : undefined;
+    const err = regexError(pattern, flags ?? 'g');
+    if (err) {
+      warnings.push(`${where}: transform #${i + 1} ignored. ${err}`);
+      return;
+    }
+    const t: SourceTransform = {
+      pattern,
+      replacement: typeof o.replacement === 'string' ? o.replacement : '',
+    };
+    if (flags) t.flags = flags;
+    out.push(t);
+  });
+  return out;
 }
 
 export function validateBundle(raw: unknown): ValidationResult<ConfigBundle> {
@@ -243,5 +313,7 @@ export function sourceSignature(s: Source): string {
     s.refang ? '1' : '0',
     s.category?.trim() ?? '',
     [...s.types].sort().join(','),
+    s.match ? JSON.stringify(s.match) : '',
+    s.transform?.length ? JSON.stringify(s.transform) : '',
   ].join(' ');
 }

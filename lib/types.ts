@@ -2,6 +2,17 @@ export type HttpMethod = 'GET' | 'POST';
 
 export type Encoding = 'none' | 'url' | 'base64';
 
+export interface SourceMatch {
+  pattern: string;
+  flags?: string;
+}
+
+export interface SourceTransform {
+  pattern: string;
+  replacement: string;
+  flags?: string;
+}
+
 export type IndicatorType =
   | 'any'
   | 'ipv4'
@@ -27,6 +38,8 @@ export interface Source {
   types: IndicatorType[];
   enabled: boolean;
   openInBackground?: boolean;
+  match?: SourceMatch;
+  transform?: SourceTransform[];
   origin?: 'local' | 'remote';
 }
 

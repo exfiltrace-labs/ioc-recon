@@ -1,4 +1,5 @@
-import type { IndicatorType, DetectedIndicator } from './types';
+import type { IndicatorType, DetectedIndicator, Source } from './types';
+import { compileRegex } from './regex';
 
 export const INDICATOR_META: Record<IndicatorType, { label: string; help: string }> = {
   any: { label: 'Any', help: 'Matches every selection' },
@@ -81,4 +82,13 @@ export function detect(raw: string): DetectedIndicator {
 export function sourceMatches(sourceTypes: IndicatorType[], detected: IndicatorType[]): boolean {
   if (sourceTypes.includes('any')) return true;
   return sourceTypes.some((t) => detected.includes(t));
+}
+
+export function selectionMatchesSource(source: Source, detected: DetectedIndicator): boolean {
+  if (!sourceMatches(source.types, detected.types)) return false;
+  if (source.match?.pattern) {
+    const re = compileRegex(source.match.pattern, source.match.flags);
+    if (re && !re.test(detected.refanged)) return false;
+  }
+  return true;
 }
