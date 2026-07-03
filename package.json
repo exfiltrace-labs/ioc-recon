@@ -1,6 +1,6 @@
 {
   "name": "ioc-recon-context-search",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Right-click context-menu search across multiple configurable sources. Smart-keyword style lookups for analysts and power users.",
   "type": "module",
