@@ -2,62 +2,106 @@
   "version": 1,
   "exportedAt": "2026-01-01T00:00:00.000Z",
   "settings": {
+    "placeholder": "%s",
     "groupByCategory": true,
+    "openMultipleInBackground": true,
     "showAllItem": true
   },
   "sources": [
     {
-      "id": "team-vt-search",
+      "id": "seed-google",
+      "name": "Google",
+      "category": "General",
+      "method": "GET",
+      "url": "https://www.google.com/search?q=%s",
+      "encoding": "url",
+      "refang": false,
+      "types": ["any"],
+      "enabled": true
+    },
+    {
+      "id": "seed-vt",
       "name": "VirusTotal Search",
       "category": "Threat Intel",
       "method": "GET",
       "url": "https://www.virustotal.com/gui/search/%s",
       "encoding": "url",
       "refang": true,
-      "types": ["ipv4", "ipv6", "domain", "url", "md5", "sha1", "sha256"]
+      "types": ["ipv4", "ipv6", "domain", "md5", "sha1", "sha256"],
+      "enabled": true
     },
     {
-      "id": "team-shodan",
+      "id": "seed-shodan",
       "name": "Shodan",
       "category": "Threat Intel",
       "method": "GET",
       "url": "https://www.shodan.io/search?query=%s",
       "encoding": "url",
       "refang": true,
-      "types": ["ipv4", "ipv6", "domain"]
+      "types": ["ipv4", "ipv6", "domain"],
+      "enabled": true
     },
     {
-      "id": "team-abuseipdb",
+      "id": "seed-abuseipdb",
       "name": "AbuseIPDB",
       "category": "Threat Intel",
       "method": "GET",
       "url": "https://www.abuseipdb.com/check/%s",
       "encoding": "url",
       "refang": true,
-      "types": ["ipv4", "ipv6"]
+      "types": ["ipv4", "ipv6"],
+      "enabled": true
     },
     {
-      "id": "team-urlscan",
+      "id": "seed-urlscan",
       "name": "UrlScan.io",
       "category": "Threat Intel",
       "method": "GET",
       "url": "https://urlscan.io/search/#%s",
       "encoding": "url",
       "refang": true,
-      "types": ["domain", "url", "ipv4"]
+      "types": ["domain", "ipv4", "asn"],
+      "enabled": true
     },
     {
-      "id": "team-nvd",
-      "name": "NVD (CVE)",
-      "category": "Vuln",
+      "id": "seed-bgp-he",
+      "name": "Hurricane Electric BGP",
+      "category": "Network",
       "method": "GET",
-      "url": "https://nvd.nist.gov/vuln/detail/%s",
+      "url": "https://bgp.he.net/%s",
       "encoding": "url",
       "refang": false,
-      "types": ["cve"]
+      "types": ["asn"],
+      "enabled": true
     },
     {
-      "id": "team-mitre-attack",
+      "id": "seed-ipinfo",
+      "name": "IPinfo",
+      "category": "Network",
+      "method": "GET",
+      "url": "https://ipinfo.io/%s",
+      "encoding": "url",
+      "refang": true,
+      "types": ["asn", "ipv4", "ipv6"],
+      "enabled": true
+    },
+    {
+      "id": "seed-maclookup",
+      "name": "MAC Lookup",
+      "category": "Network",
+      "method": "GET",
+      "url": "https://maclookup.app/search/result?mac=%s",
+      "encoding": "none",
+      "refang": false,
+      "types": ["mac"],
+      "enabled": true,
+      "transform": [
+        { "pattern": "[:.-]", "replacement": "", "flags": "g" },
+        { "pattern": "(..)(?=.)", "replacement": "$1:", "flags": "g" }
+      ]
+    },
+    {
+      "id": "seed-mitre",
       "name": "MITRE ATT&CK",
       "category": "Threat Intel",
       "method": "GET",
@@ -65,20 +109,53 @@
       "encoding": "none",
       "refang": false,
       "types": ["any"],
+      "enabled": true,
       "match": { "pattern": "^T\\d{4}(\\.\\d{3})?$", "flags": "i" },
       "transform": [{ "pattern": "\\.", "replacement": "/" }]
     },
     {
-      "id": "team-internal-soar",
-      "name": "Internal SOAR - create case (example POST)",
-      "category": "Internal",
-      "method": "POST",
-      "url": "https://soar.example.com/api/cases/search",
-      "body": "indicator=%s&source=ioc-recon",
-      "contentType": "application/x-www-form-urlencoded",
-      "encoding": "none",
+      "id": "seed-mxtoolbox",
+      "name": "MXToolbox",
+      "category": "Network",
+      "method": "GET",
+      "url": "https://mxtoolbox.com/SuperTool.aspx?action=mx%3a%s&run=toolpage",
+      "encoding": "url",
       "refang": true,
-      "types": ["any"]
+      "types": ["domain"],
+      "enabled": true
+    },
+    {
+      "id": "seed-whois",
+      "name": "WHOIS (Domain)",
+      "category": "Network",
+      "method": "GET",
+      "url": "https://who.is/whois/%s",
+      "encoding": "url",
+      "refang": true,
+      "types": ["domain"],
+      "enabled": true
+    },
+    {
+      "id": "seed-whois-ip",
+      "name": "WHOIS (IP)",
+      "category": "Network",
+      "method": "GET",
+      "url": "https://who.is/whois-ip/ip-address/%s",
+      "encoding": "url",
+      "refang": true,
+      "types": ["ipv4"],
+      "enabled": true
+    },
+    {
+      "id": "seed-nvd",
+      "name": "NVD (CVE)",
+      "category": "Vuln",
+      "method": "GET",
+      "url": "https://nvd.nist.gov/vuln/detail/%s",
+      "encoding": "url",
+      "refang": false,
+      "types": ["cve"],
+      "enabled": true
     }
   ]
 }

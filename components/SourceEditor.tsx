@@ -112,7 +112,13 @@ const SAMPLES: Record<IndicatorType, string> = {
   md5: 'd41d8cd98f00b204e9800998ecf8427e',
   sha1: 'da39a3ee5e6b4b0d3255bfef95601890afd80709',
   sha256: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+  sha512:
+    'cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e',
   cve: 'CVE-2024-3094',
+  cwe: 'CWE-79',
+  asn: 'AS15169',
+  crypto: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa',
+  mac: '8C:1F:64:70:D4:2A',
 };
 
 export function SourceEditor(props: {

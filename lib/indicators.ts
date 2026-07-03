@@ -11,11 +11,17 @@ export const INDICATOR_META: Record<IndicatorType, { label: string; help: string
   md5: { label: 'MD5', help: '32 hex chars' },
   sha1: { label: 'SHA1', help: '40 hex chars' },
   sha256: { label: 'SHA256', help: '64 hex chars' },
+  sha512: { label: 'SHA512', help: '128 hex chars' },
   cve: { label: 'CVE', help: 'e.g. CVE-2024-3094' },
+  cwe: { label: 'CWE', help: 'e.g. CWE-79' },
+  asn: { label: 'ASN', help: 'e.g. AS15169' },
+  crypto: { label: 'Crypto', help: 'BTC / ETH / XMR address' },
+  mac: { label: 'MAC', help: 'e.g. 8C:1F:64:70:D4:2A' },
 };
 
 export const ALL_INDICATOR_TYPES: IndicatorType[] = [
-  'any', 'ipv4', 'ipv6', 'domain', 'url', 'email', 'md5', 'sha1', 'sha256', 'cve',
+  'any', 'ipv4', 'ipv6', 'domain', 'url', 'email',
+  'md5', 'sha1', 'sha256', 'sha512', 'cve', 'cwe', 'asn', 'crypto', 'mac',
 ];
 
 export function refang(input: string): string {
@@ -47,7 +53,13 @@ const RE = {
   md5: /^[a-f0-9]{32}$/i,
   sha1: /^[a-f0-9]{40}$/i,
   sha256: /^[a-f0-9]{64}$/i,
+  sha512: /^[a-f0-9]{128}$/i,
   cve: /^CVE-\d{4}-\d{4,7}$/i,
+  cwe: /^CWE-\d{1,6}$/i,
+  asn: /^AS\d{1,10}$/i,
+  crypto:
+    /^(?:0x[0-9a-fA-F]{40}|bc1[a-z0-9]{11,71}|[13][a-km-zA-HJ-NP-Z1-9]{25,34}|[48][0-9AB][1-9A-HJ-NP-Za-km-z]{93,104})$/,
+  mac: /^(?:[0-9a-f]{2}[:-]){5}[0-9a-f]{2}$|^(?:[0-9a-f]{4}\.){2}[0-9a-f]{4}$|^[0-9a-f]{12}$/i,
 };
 
 export function detectTypes(refanged: string): IndicatorType[] {
@@ -59,9 +71,14 @@ export function detectTypes(refanged: string): IndicatorType[] {
   if (RE.ipv4.test(v)) types.push('ipv4');
   else if (RE.ipv6.test(v)) types.push('ipv6');
   if (RE.cve.test(v)) types.push('cve');
+  if (RE.cwe.test(v)) types.push('cwe');
+  if (RE.asn.test(v)) types.push('asn');
+  if (RE.crypto.test(v)) types.push('crypto');
+  if (RE.mac.test(v)) types.push('mac');
   if (RE.md5.test(v)) types.push('md5');
   else if (RE.sha1.test(v)) types.push('sha1');
   else if (RE.sha256.test(v)) types.push('sha256');
+  else if (RE.sha512.test(v)) types.push('sha512');
   if (
     !types.includes('url') &&
     !types.includes('email') &&

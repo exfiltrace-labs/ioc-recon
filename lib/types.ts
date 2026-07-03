@@ -23,7 +23,12 @@ export type IndicatorType =
   | 'md5'
   | 'sha1'
   | 'sha256'
-  | 'cve';
+  | 'sha512'
+  | 'cve'
+  | 'cwe'
+  | 'asn'
+  | 'crypto'
+  | 'mac';
 
 export interface Source {
   id: string;

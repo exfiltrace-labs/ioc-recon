@@ -51,7 +51,7 @@ export const SEED_SOURCES: Source[] = [
   {
     id: 'seed-vt', name: 'VirusTotal Search', category: 'Threat Intel', method: 'GET',
     url: 'https://www.virustotal.com/gui/search/%s', encoding: 'url', refang: true,
-    types: ['ipv4', 'ipv6', 'domain', 'url', 'md5', 'sha1', 'sha256'], enabled: true,
+    types: ['ipv4', 'ipv6', 'domain', 'md5', 'sha1', 'sha256'], enabled: true,
   },
   {
     id: 'seed-shodan', name: 'Shodan', category: 'Threat Intel', method: 'GET',
@@ -66,7 +66,26 @@ export const SEED_SOURCES: Source[] = [
   {
     id: 'seed-urlscan', name: 'UrlScan.io', category: 'Threat Intel', method: 'GET',
     url: 'https://urlscan.io/search/#%s', encoding: 'url', refang: true,
-    types: ['domain', 'url', 'ipv4'], enabled: true,
+    types: ['domain', 'ipv4', 'asn'], enabled: true,
+  },
+  {
+    id: 'seed-bgp-he', name: 'Hurricane Electric BGP', category: 'Network', method: 'GET',
+    url: 'https://bgp.he.net/%s', encoding: 'url', refang: false,
+    types: ['asn'], enabled: true,
+  },
+  {
+    id: 'seed-ipinfo', name: 'IPinfo', category: 'Network', method: 'GET',
+    url: 'https://ipinfo.io/%s', encoding: 'url', refang: true,
+    types: ['asn', 'ipv4', 'ipv6'], enabled: true,
+  },
+  {
+    id: 'seed-maclookup', name: 'MAC Lookup', category: 'Network', method: 'GET',
+    url: 'https://maclookup.app/search/result?mac=%s', encoding: 'none', refang: false,
+    types: ['mac'], enabled: true,
+    transform: [
+      { pattern: '[:.-]', replacement: '', flags: 'g' },
+      { pattern: '(..)(?=.)', replacement: '$1:', flags: 'g' },
+    ],
   },
   {
     id: 'seed-mitre', name: 'MITRE ATT&CK', category: 'Threat Intel', method: 'GET',
@@ -81,9 +100,14 @@ export const SEED_SOURCES: Source[] = [
     refang: true, types: ['domain'], enabled: true,
   },
   {
-    id: 'seed-whois', name: 'WHOIS', category: 'Network', method: 'GET',
+    id: 'seed-whois', name: 'WHOIS (Domain)', category: 'Network', method: 'GET',
     url: 'https://who.is/whois/%s', encoding: 'url', refang: true,
-    types: ['domain', 'ipv4'], enabled: true,
+    types: ['domain'], enabled: true,
+  },
+  {
+    id: 'seed-whois-ip', name: 'WHOIS (IP)', category: 'Network', method: 'GET',
+    url: 'https://who.is/whois-ip/ip-address/%s', encoding: 'url', refang: true,
+    types: ['ipv4'], enabled: true,
   },
   {
     id: 'seed-nvd', name: 'NVD (CVE)', category: 'Vuln', method: 'GET',
